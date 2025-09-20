@@ -1,13 +1,24 @@
 <div class="container mx-auto px-6 py-16 md:py-24">
     <div class="flex justify-between items-center mb-8">
-         <h1 id="analysisTitle" class="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-white">AI Analysis Report</h1>
-         <button id="backToDashboardBtn" class="bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-white font-semibold py-2 px-6 rounded-lg">Back to Dashboard</button>
+        <h1 id="analysisTitle" 
+            class="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-white">
+            AI Analysis Report
+        </h1>
+        <button id="backToDashboardBtn" 
+            class="bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-white font-semibold py-2 px-6 rounded-lg hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors">
+            Back to Dashboard
+        </button>
     </div>
+
     <div id="analysisLoading" class="hidden flex flex-col items-center justify-center my-16">
         <div class="loader"></div>
-        <p class="text-slate-600 dark:text-slate-400 mt-4 text-lg">AI is analyzing your document...</p>
+        <p class="text-slate-600 dark:text-slate-400 mt-4 text-lg">
+            AI is analyzing your document...
+        </p>
     </div>
-    <!-- The entire analysis, including the new checklist, will be dynamically rendered here -->
-    <div id="analysisContent"></div>
-</div>
 
+    <!-- Analysis sections -->
+    <div id="analysisContent" class="space-y-8">
+        <!-- Each section (summary/risks/checklist/chat) will render here dynamically -->
+    </div>
+</div>

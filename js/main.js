@@ -46,20 +46,45 @@ const dom = {
 };
 
 // --- Theme Management ---
+// const applyTheme = (theme) => {
+//     if (theme === 'light') document.documentElement.classList.remove('dark');
+//     else document.documentElement.classList.add('dark');
+// };
+// const toggleTheme = () => {
+//     const newTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+//     localStorage.setItem('theme', newTheme);
+//     applyTheme(newTheme);
+//     const themeIndicator = document.getElementById('profileThemeIndicator');
+//     if (themeIndicator) {
+//          themeIndicator.textContent = newTheme === 'dark' ? '🌙' : '☀️';
+//     }
+// };
+// applyTheme(localStorage.getItem('theme') || 'dark');
+
+// --- Theme Management ---
+// Theme Management
 const applyTheme = (theme) => {
-    if (theme === 'light') document.documentElement.classList.remove('dark');
-    else document.documentElement.classList.add('dark');
+  if (theme === "light") {
+    document.documentElement.classList.remove("dark");
+  } else {
+    document.documentElement.classList.add("dark");
+  }
+
+  // update toggle
+  const indicator = document.getElementById("profileThemeIndicator");
+  if (indicator) indicator.textContent = theme === "dark" ? "🌙" : "☀️";
 };
+
 const toggleTheme = () => {
-    const newTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
-    localStorage.setItem('theme', newTheme);
-    applyTheme(newTheme);
-    const themeIndicator = document.getElementById('profileThemeIndicator');
-    if (themeIndicator) {
-         themeIndicator.textContent = newTheme === 'dark' ? '🌙' : '☀️';
-    }
+  const newTheme = document.documentElement.classList.contains("dark") ? "light" : "dark";
+  localStorage.setItem("theme", newTheme);
+  applyTheme(newTheme);
 };
-applyTheme(localStorage.getItem('theme') || 'dark');
+
+// Force dark default if nothing saved
+applyTheme(localStorage.getItem("theme") || "dark");
+
+
 
 // --- Router and Page Loading ---
 const loadPage = async (page) => {
@@ -266,56 +291,187 @@ async function analyzeDocument(documentText, documentType) {
     } catch (error) { console.error("Gemini API call failed:", error); return null; }
 }
 
+// function displayAnalysis(fileName, analysisData) {
+//      document.getElementById('analysisTitle').textContent = `Analysis for: ${fileName}`;
+//      const contentContainer = document.getElementById('analysisContent');
+//      contentContainer.innerHTML = '';
+
+//     if (!analysisData) {
+//         contentContainer.innerHTML = `<div class="analysis-section text-center"><h2 class="text-2xl font-bold text-red-500 mb-4">Analysis Failed</h2><p>Could not analyze document.</p></div>`;
+//         return;
+//     }
+    
+//     // const summariesHTML = `<div class="analysis-section"><h2 class="text-2xl font-bold text-sky-500 mb-4">Key Summary</h2><div class="p-4 bg-slate-100 dark:bg-slate-900 rounded-lg"><p>${analysisData.summaries?.summary||"N/A"}</p></div></div>`;
+
+//     const summariesHTML = `
+//         <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6 transition-colors">
+//             <h2 class="text-2xl font-bold text-sky-500 mb-4">Key Summary</h2>
+//         <div class="p-4 bg-slate-100 dark:bg-slate-900 rounded-lg">
+//         <p>${analysisData.summaries?.summary || "N/A"}</p>
+//         </div>
+//         </div>`;
+
+    
+//     let risksHTML = '';
+//     if (analysisData.risks && analysisData.risks.length > 0) {
+//         const riskItems = analysisData.risks.map(risk => `<div class="p-4 rounded-lg bg-slate-100/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700"><p class="text-slate-700 dark:text-slate-300">"<span class="${risk.level === 'high' ? 'highlight-high' : 'highlight-attention'}">${risk.clause}</span>"</p><p class="text-sm mt-2"><strong>Reason:</strong> ${risk.explanation}</p></div>`).join('');
+//         risksHTML = `<div class="analysis-section"><h2 class="text-2xl font-bold text-sky-500 mb-4">Clause Risk Scoring</h2><div class="space-y-4">${riskItems}</div></div>`;
+//     } else {
+//          risksHTML = `<div class="analysis-section"><h2 class="text-2xl font-bold text-sky-500 mb-4">Clause Risk Scoring</h2><div class="p-4 rounded-lg bg-slate-100/50 dark:bg-slate-900/50 text-center"><p class="text-green-600 dark:text-green-400 font-semibold">No significant risks were found.</p></div></div>`;
+//     }
+
+//     let checklistHTML = '';
+//     if (analysisData.checklist && analysisData.checklist.length > 0) {
+//         const checklistItems = analysisData.checklist.map(item => `<li class="flex items-start"><span class="text-sky-500 mr-3 mt-1">☐</span><span>${item}</span></li>`).join('');
+//         checklistHTML = `<div class="analysis-section"><h2 class="text-2xl font-bold text-sky-500 mb-4">Smart Checklist</h2><ul class="space-y-2">${checklistItems}</ul></div>`;
+//     }
+
+//     const chatHTML = `
+//         <div class="analysis-section">
+//             <div class="flex justify-between items-center mb-4">
+//                 <h2 class="text-2xl font-bold text-sky-500">Interactive Q&A</h2>
+//                 <div class="relative">
+//                     <button id="languageSelectBtn" type="button" class="bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-2 text-sm font-medium flex items-center gap-2">
+//                         <span>English</span>
+//                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+//                     </button>
+//                     <div id="languageDropdown" class="hidden absolute right-0 mt-1 w-56 bg-white dark:bg-slate-800 rounded-lg shadow-lg z-10 border">
+//                         <div class="p-2"><input type="text" id="languageSearchInput" placeholder="Search..." class="w-full bg-slate-100 dark:bg-slate-900 border-slate-300 dark:border-slate-700 rounded-md p-2 text-sm"></div>
+//                         <ul id="languageList" class="max-h-48 overflow-y-auto"></ul>
+//                     </div>
+//                 </div>
+//             </div>
+//             <div id="chatMessages" class="h-64 overflow-y-auto p-4 bg-slate-100 dark:bg-slate-900 rounded-lg mb-4 space-y-4 flex flex-col"></div>
+//             <form id="chatForm" class="flex items-center gap-4">
+//                 <input type="text" id="chatInput" placeholder="Ask a question..." class="flex-grow bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg p-3" required>
+//                 <button type="submit" class="bg-sky-500 hover:bg-sky-600 text-white font-semibold py-3 px-5 rounded-lg"><svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg></button>
+//             </form>
+//         </div>`;
+
+//     contentContainer.innerHTML = summariesHTML + risksHTML + checklistHTML + chatHTML;
+
+//     const langBtn = document.getElementById('languageSelectBtn');
+//     const langDropdown = document.getElementById('languageDropdown');
+//     const langSearch = document.getElementById('languageSearchInput');
+//     const langList = document.getElementById('languageList');
+//     const populateLangs = (filter = '') => {
+//         langList.innerHTML = '';
+//         indianLanguages.filter(lang => lang.toLowerCase().includes(filter.toLowerCase())).forEach(lang => {
+//             const li = document.createElement('li');
+//             li.textContent = lang;
+//             li.className = 'px-4 py-2 text-sm cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700';
+//             li.onclick = () => { currentLanguage = lang; langBtn.querySelector('span').textContent = lang; langDropdown.classList.add('hidden'); };
+//             langList.appendChild(li);
+//         });
+//     };
+//     populateLangs();
+//     langBtn.addEventListener('click', (e) => { e.stopPropagation(); langDropdown.classList.toggle('hidden'); });
+//     langSearch.addEventListener('input', () => populateLangs(langSearch.value));
+//     document.addEventListener('click', (e) => { if (langDropdown && !langBtn.contains(e.target)) langDropdown.classList.add('hidden'); });
+//     document.getElementById('chatForm').addEventListener('submit', handleChatSubmit);
+// }
+
 function displayAnalysis(fileName, analysisData) {
-     document.getElementById('analysisTitle').textContent = `Analysis for: ${fileName}`;
-     const contentContainer = document.getElementById('analysisContent');
-     contentContainer.innerHTML = '';
+    document.getElementById('analysisTitle').textContent = `Analysis for: ${fileName}`;
+    const contentContainer = document.getElementById('analysisContent');
+    contentContainer.innerHTML = '';
 
     if (!analysisData) {
-        contentContainer.innerHTML = `<div class="analysis-section text-center"><h2 class="text-2xl font-bold text-red-500 mb-4">Analysis Failed</h2><p>Could not analyze document.</p></div>`;
+        contentContainer.innerHTML = `
+          <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6 text-center">
+            <h2 class="text-2xl font-bold text-red-500 mb-4">Analysis Failed</h2>
+            <p>Could not analyze document.</p>
+          </div>`;
         return;
     }
-    
-    const summariesHTML = `<div class="analysis-section"><h2 class="text-2xl font-bold text-sky-500 mb-4">Key Summary</h2><div class="p-4 bg-slate-100 dark:bg-slate-900 rounded-lg"><p>${analysisData.summaries?.summary||"N/A"}</p></div></div>`;
-    
+
+    // --- Key Summary ---
+    const summariesHTML = `
+      <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6">
+        <h2 class="text-2xl font-bold text-sky-500 mb-4">Key Summary</h2>
+        <div class="p-4 bg-slate-100 dark:bg-slate-900 rounded-lg">
+          <p>${analysisData.summaries?.summary || "N/A"}</p>
+        </div>
+      </div>`;
+
+    // --- Clause Risks ---
     let risksHTML = '';
     if (analysisData.risks && analysisData.risks.length > 0) {
-        const riskItems = analysisData.risks.map(risk => `<div class="p-4 rounded-lg bg-slate-100/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700"><p class="text-slate-700 dark:text-slate-300">"<span class="${risk.level === 'high' ? 'highlight-high' : 'highlight-attention'}">${risk.clause}</span>"</p><p class="text-sm mt-2"><strong>Reason:</strong> ${risk.explanation}</p></div>`).join('');
-        risksHTML = `<div class="analysis-section"><h2 class="text-2xl font-bold text-sky-500 mb-4">Clause Risk Scoring</h2><div class="space-y-4">${riskItems}</div></div>`;
+        const riskItems = analysisData.risks.map(risk => `
+          <div class="p-4 rounded-lg bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
+            <p class="text-slate-700 dark:text-slate-300">
+              "<span class="${risk.level === 'high' ? 'highlight-high' : 'highlight-attention'}">${risk.clause}</span>"
+            </p>
+            <p class="text-sm mt-2"><strong>Reason:</strong> ${risk.explanation}</p>
+          </div>`).join('');
+        risksHTML = `
+          <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6">
+            <h2 class="text-2xl font-bold text-sky-500 mb-4">Clause Risk Scoring</h2>
+            <div class="space-y-4">${riskItems}</div>
+          </div>`;
     } else {
-         risksHTML = `<div class="analysis-section"><h2 class="text-2xl font-bold text-sky-500 mb-4">Clause Risk Scoring</h2><div class="p-4 rounded-lg bg-slate-100/50 dark:bg-slate-900/50 text-center"><p class="text-green-600 dark:text-green-400 font-semibold">No significant risks were found.</p></div></div>`;
+        risksHTML = `
+          <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6">
+            <h2 class="text-2xl font-bold text-sky-500 mb-4">Clause Risk Scoring</h2>
+            <div class="p-4 rounded-lg bg-slate-100 dark:bg-slate-900 text-center">
+              <p class="text-green-600 dark:text-green-400 font-semibold">No significant risks were found.</p>
+            </div>
+          </div>`;
     }
 
+    // --- Checklist ---
     let checklistHTML = '';
     if (analysisData.checklist && analysisData.checklist.length > 0) {
-        const checklistItems = analysisData.checklist.map(item => `<li class="flex items-start"><span class="text-sky-500 mr-3 mt-1">☐</span><span>${item}</span></li>`).join('');
-        checklistHTML = `<div class="analysis-section"><h2 class="text-2xl font-bold text-sky-500 mb-4">Smart Checklist</h2><ul class="space-y-2">${checklistItems}</ul></div>`;
+        const checklistItems = analysisData.checklist.map(item => `
+          <li class="flex items-start">
+            <span class="text-sky-500 mr-3 mt-1">☐</span>
+            <span>${item}</span>
+          </li>`).join('');
+        checklistHTML = `
+          <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6">
+            <h2 class="text-2xl font-bold text-sky-500 mb-4">Smart Checklist</h2>
+            <ul class="space-y-2">${checklistItems}</ul>
+          </div>`;
     }
 
+    // --- Interactive Q&A ---
     const chatHTML = `
-        <div class="analysis-section">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-2xl font-bold text-sky-500">Interactive Q&A</h2>
-                <div class="relative">
-                    <button id="languageSelectBtn" type="button" class="bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-2 text-sm font-medium flex items-center gap-2">
-                        <span>English</span>
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </button>
-                    <div id="languageDropdown" class="hidden absolute right-0 mt-1 w-56 bg-white dark:bg-slate-800 rounded-lg shadow-lg z-10 border">
-                        <div class="p-2"><input type="text" id="languageSearchInput" placeholder="Search..." class="w-full bg-slate-100 dark:bg-slate-900 border-slate-300 dark:border-slate-700 rounded-md p-2 text-sm"></div>
-                        <ul id="languageList" class="max-h-48 overflow-y-auto"></ul>
-                    </div>
-                </div>
+      <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl font-bold text-sky-500">Interactive Q&A</h2>
+          <div class="relative">
+            <button id="languageSelectBtn" type="button" 
+              class="bg-slate-200 dark:bg-slate-700 px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2">
+              <span>English</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>
+            <div id="languageDropdown" class="hidden absolute right-0 mt-1 w-56 bg-white dark:bg-slate-800 rounded-lg shadow-lg z-10 border">
+              <div class="p-2">
+                <input type="text" id="languageSearchInput" placeholder="Search..." 
+                  class="w-full bg-slate-100 dark:bg-slate-900 border-slate-300 dark:border-slate-700 rounded-md p-2 text-sm">
+              </div>
+              <ul id="languageList" class="max-h-48 overflow-y-auto"></ul>
             </div>
-            <div id="chatMessages" class="h-64 overflow-y-auto p-4 bg-slate-100 dark:bg-slate-900 rounded-lg mb-4 space-y-4 flex flex-col"></div>
-            <form id="chatForm" class="flex items-center gap-4">
-                <input type="text" id="chatInput" placeholder="Ask a question..." class="flex-grow bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg p-3" required>
-                <button type="submit" class="bg-sky-500 hover:bg-sky-600 text-white font-semibold py-3 px-5 rounded-lg"><svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg></button>
-            </form>
-        </div>`;
+          </div>
+        </div>
+        <div id="chatMessages" class="h-64 overflow-y-auto p-4 bg-slate-100 dark:bg-slate-900 rounded-lg mb-4 space-y-4 flex flex-col"></div>
+        <form id="chatForm" class="flex items-center gap-4">
+          <input type="text" id="chatInput" placeholder="Ask a question..." 
+            class="flex-grow bg-slate-200 dark:bg-slate-700 rounded-lg p-3" required>
+          <button type="submit" 
+            class="bg-sky-500 hover:bg-sky-600 text-white font-semibold py-3 px-5 rounded-lg">
+            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.27 3.13A59.77 59.77 0 0121.48 12 59.77 59.77 0 013.27 20.88L6 12zm0 0h7.5"/>
+            </svg>
+          </button>
+        </form>
+      </div>`;
 
     contentContainer.innerHTML = summariesHTML + risksHTML + checklistHTML + chatHTML;
 
+    // Q&A setup (unchanged)
     const langBtn = document.getElementById('languageSelectBtn');
     const langDropdown = document.getElementById('languageDropdown');
     const langSearch = document.getElementById('languageSearchInput');
@@ -336,6 +492,7 @@ function displayAnalysis(fileName, analysisData) {
     document.addEventListener('click', (e) => { if (langDropdown && !langBtn.contains(e.target)) langDropdown.classList.add('hidden'); });
     document.getElementById('chatForm').addEventListener('submit', handleChatSubmit);
 }
+
 
 async function handleChatSubmit(e) {
     e.preventDefault();
