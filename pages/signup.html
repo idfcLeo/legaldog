@@ -1,0 +1,21 @@
+<div class="container mx-auto px-6 py-16 md:py-24 flex items-center justify-center">
+    <section class="max-w-md w-full text-center">
+         <h2 class="text-3xl md:text-4xl font-bold tracking-tight">Create Your Account</h2>
+        <p class="mt-4 text-lg text-slate-600 dark:text-slate-400 mb-8">Join LegalDoc to start analyzing your documents.</p>
+        <div id="emailAuthContainerSignUp">
+            <form id="signUpForm" class="space-y-4 text-left">
+                <input type="email" id="signUpEmail" placeholder="Email" class="w-full bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-sky-500" required>
+                <input type="password" id="signUpPassword" placeholder="Password (min. 6 characters)" class="w-full bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-sky-500" required>
+                <button type="submit" class="w-full bg-sky-500 hover:bg-sky-600 text-white font-semibold py-3 px-6 rounded-lg">Create Account</button>
+            </form>
+            <p id="signUpAuthError" class="text-red-500 text-sm mt-4 h-5"></p>
+            <p class="text-slate-600 dark:text-slate-400 text-sm mt-4">
+                <span>Already have an account?</span>
+                <button id="goToSignInBtn" class="font-semibold text-sky-500 hover:underline">Sign In</button>
+            </p>
+        </div>
+         <p class="mt-6 text-sm">
+            <button id="backToHomeFromSignUp" class="text-slate-600 dark:text-slate-400 hover:underline">Back to Home</button>
+        </p>
+    </section>
+</div>
