@@ -300,7 +300,7 @@ const getSystemPrompt = (docType, docText) => {
   return `
 You are an **AI Legal Assistant** specializing in **Indian law and common contract practices**.  
 The user is **${persona}** reviewing a **${docType}**.  
-Your task: analyze the document text from their perspective, focusing on **${focus}**.  
+Your task: First: to analyze that if the document is correct, legal, in alignment to the doctype provided, and then analyze the document text from their perspective, focusing on **${focus}**.   
 
 ### Output Requirements:
 - **Plain language only** (avoid legal jargon unless quoting).  
